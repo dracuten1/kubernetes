@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: yedda-tasknosub
+spec:
+  # This defines which pods are going to be represented by this Service
+  # The service becomes a network endpoint for either other services
+  # or maybe external users to connect to (eg browser)
+  selector:
+    app: taskmanager-nosub
+  ports:
+    - name: http
+      port: 80
+      targetPort: 5533
+  type: NodePort
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: yedda-task
+
+spec:
+  # This defines which pods are going to be represented by this Service
+  # The service becomes a network endpoint for either other services
+  # or maybe external users to connect to (eg browser)
+  selector:
+    app: taskmanager
+  ports:
+    - name: http
+      port: 80
+      targetPort: 5000
+  type: NodePort

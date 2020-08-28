@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tasknosub-database
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tasknosub-database
+  template: #Template for the pods
+    metadata:
+      labels:
+        app: tasknosub-database
+    spec:
+      containers:
+      - name: tasknosub-database
+        image: postgres:10.4
+        imagePullPolicy: "IfNotPresent"
+        ports:
+          - containerPort: 5432
+        envFrom:
+          - configMapRef:
+              name: postgres-nosub
+        volumeMounts:
+          - name: nosub-db-initial
+            mountPath: /docker-entrypoint-initdb.d
+          - name: persistent-storage
+            mountPath: /var/lib/postgresql/data
+            subPath: nosub
+      volumes:
+        - name: nosub-db-initial
+          configMap:
+            name: postgresql-nosub-init
+        - name: persistent-storage
+          persistentVolumeClaim:
+            claimName: nosub-ssd
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: task-database
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: task-database
+  template: #Template for the pods
+    metadata:
+      labels:
+        app: task-database
+    spec:
+      containers:
+      - name: task-database
+        image: postgres:10.4
+        imagePullPolicy: "IfNotPresent"
+        ports:
+          - containerPort: 5432
+        envFrom:
+          - configMapRef:
+              name: postgres-task
+        volumeMounts:
+          - name: task-db-initial
+            mountPath: /docker-entrypoint-initdb.d
+          - name: persistent-storage
+            mountPath: /var/lib/postgresql/data
+            subPath: task
+      volumes:
+        - name: task-db-initial
+          configMap:
+            name: postgresql-task-init
+        - name: persistent-storage
+          persistentVolumeClaim:
+            claimName: task-ssd

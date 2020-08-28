@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: taskmanager-nosub
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: taskmanager-nosub
+  template: #Template for the pods
+    metadata:
+      labels:
+        app: taskmanager-nosub
+    spec:
+      containers:
+      - name: taskmanager-nosub
+        image: dracuten1/taskmanager:tasknosub
+        imagePullPolicy: "IfNotPresent"
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 5533       
+          initialDelaySeconds: 3
+          periodSeconds: 3
+        resources:
+          requests:
+            memory: 100Mi
+            cpu: 100m
+          limits:
+            memory: 500Mi
+            cpu: 500m
+        ports:
+        - containerPort: 5533
+        envFrom:
+          - configMapRef:
+              name: aws-config       
+      imagePullSecrets:
+      - name: kubedocker
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: taskmanager
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: taskmanager
+  template: #Template for the pods
+    metadata:
+      labels:
+        app: taskmanager
+    spec:
+      containers:
+      - name: taskmanager
+        image: dracuten1/taskmanager:task
+        imagePullPolicy: Always
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 5000       
+          initialDelaySeconds: 3
+          periodSeconds: 3
+        resources:
+          requests:
+            memory: 100Mi
+            cpu: 100m
+          limits:
+            memory: 500Mi
+            cpu: 500m
+        ports:
+        - containerPort: 5000
+        envFrom:
+          - configMapRef:
+              name: aws-config
+      imagePullSecrets:
+      - name: kubedocker

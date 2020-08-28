@@ -1,0 +1,13 @@
+{
+  "username": "tasker_nosub",
+  "password": "oiufL^@SD6423",
+  "engine": "postgres",
+  "host": "db-test-history.cmxo3gtibgwe.ap-southeast-1.rds.amazonaws.com",
+  "port": 5432,
+  "dbname": "wigo",
+  "dbInstanceIdentifier": "db-test-history",
+  "MinumumPoolSize": "5",
+  "MaximumPoolSize": "300",
+  "ConnectionIdleLifetime": "300",
+  "DefaultSchema": "task_manager_nosub1"
+}

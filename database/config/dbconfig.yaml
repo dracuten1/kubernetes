@@ -1,0 +1,31 @@
+apiVersion: v1
+data:
+  taskmng-nosub.sql: |
+    CREATE TABLE public."BinaryInput" (	id_task int8 NOT NULL,	"data" bytea NULL,	"type" int4 NOT NULL,	CONSTRAINT "BinaryInput_pkey" PRIMARY KEY (id_task));
+    CREATE TABLE public."Input" (id_task int8 NOT NULL,"data" text NULL,	"type" text NULL,	CONSTRAINT "Input_pkey" PRIMARY KEY (id_task));
+    CREATE TABLE public."Result" (	id_task int8 NOT NULL,	"data" bytea NULL,	"type" int4 NOT NULL,	CONSTRAINT "Result_pkey" PRIMARY KEY (id_task));
+    CREATE TABLE public."Task" (	has_input bool NULL DEFAULT false,	has_result bool NULL DEFAULT false,	id_task bigserial NOT NULL,	state int4 NOT NULL,	"type" int4 NOT NULL,	priority int4 NULL,	info text NULL,	time_ping timestamp NULL DEFAULT CURRENT_TIMESTAMP,	CONSTRAINT "Task_pkey" PRIMARY KEY (id_task));
+kind: ConfigMap
+metadata:
+  name: postgresql-nosub-init
+  namespace: default
+---
+apiVersion: v1
+data:
+  taskmng.sql: "CREATE TABLE \"BinaryInput\" (\r\n\tid_job int8 NOT NULL,\r\n\t\"data\"
+    bytea NULL,\r\n\tCONSTRAINT \"BinaryInput_pkey\" PRIMARY KEY (id_job)\r\n);\r\n\r\nCREATE
+    TABLE \"Input\" (\r\n\tid_job int8 NOT NULL,\r\n\t\"data\" text NULL,\r\n\tCONSTRAINT
+    \"Input_pkey\" PRIMARY KEY (id_job)\r\n);\r\n\r\nCREATE TABLE \"Job\" (\r\n\tid_job
+    bigserial NOT NULL,\r\n\tid_task int8 NOT NULL,\r\n\tstate int4 NOT NULL,\r\n\tpriority
+    int4 NULL,\r\n\tinfo text NULL,\r\n\ttime_ping timestamp NULL DEFAULT CURRENT_TIMESTAMP,\r\n\tCONSTRAINT
+    \"Job_pkey\" PRIMARY KEY (id_job)\r\n);\r\n\r\nCREATE TABLE \"Output\" (\r\n\tid_job
+    int8 NOT NULL,\r\n\t\"data\" bytea NULL,\r\n\tCONSTRAINT \"Output_pkey\" PRIMARY
+    KEY (id_job)\r\n);\r\n\r\nCREATE TABLE \"Result\" (\r\n\tid_task int8 NOT NULL,\r\n\t\"data\"
+    bytea NULL,\r\n\tCONSTRAINT \"Result_pkey\" PRIMARY KEY (id_task)\r\n);\r\n\r\nCREATE
+    TABLE \"Task\" (\r\n\tid_task bigserial NOT NULL,\r\n\tstate int4 NOT NULL,\r\n\tpriority
+    int4 NULL,\r\n\tinfo text NULL,\r\n\ttime_ping timestamp NULL DEFAULT CURRENT_TIMESTAMP,\r\n\tCONSTRAINT
+    \"Task_pkey\" PRIMARY KEY (id_task)\r\n);"
+kind: ConfigMap
+metadata:
+  name: postgresql-task-init
+  namespace: default

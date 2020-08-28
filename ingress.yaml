@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: task-router
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: static-google
+spec:
+  rules:
+    - host: task-google.yedda.link
+      http:
+        paths:
+          - path: /*
+            backend:
+              serviceName: yedda-task
+              servicePort: 80
+    - host: tasknosub-google.yedda.link
+      http:
+        paths:
+          - path: /*
+            backend:
+              serviceName: yedda-tasknosub
+              servicePort: 80

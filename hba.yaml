@@ -1,0 +1,17 @@
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata: 
+  name: taskmanager-nosub
+  namespace: default
+spec:
+  maxReplicas: 5
+  minReplicas: 2
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: taskmanager-nosub
+  targetCPUUtilizationPercentage: 200
+status:
+  currentCPUUtilizationPercentage: 0
+  currentReplicas: 2
+  desiredReplicas: 2
